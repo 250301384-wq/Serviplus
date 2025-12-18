@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ServiPlus Churn Prediction System Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/v4-shims.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1e40af',
+                        secondary: '#3b82f6',
+                        accent: '#06b6d4',
+                        success: '#10b981',
+                        warning: '#f59e0b',
+                        danger: '#ef4444',
+                        dark: '#1f2937',
+                        light: '#f8fafc'
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .glass-effect {
+                backdrop-filter: blur(10px);
+                background: rgba(255, 255, 255, 0.1);
+            }
+            .gradient-bg {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            }
+            .card-hover {
+                transition: all 0.3s ease;
+            }
+            .card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            }
+            .animate-float {
+                animation: float 3s ease-in-out infinite;
+            }
+            @keyframes float {
+                0%, 100% { transform: translateY(0px); }
+                50% { transform: translateY(-10px); }
+            }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 min-h-screen font-inter">
+    
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <i class="fa fa-shield text-primary text-2xl mr-2"></i>
+                        <span class="text-xl font-bold text-primary">ServiPlus</span>
+                    </div>
+                    <div class="hidden md:ml-10 md:flex space-x-8">
+                        <a href="#overview" class="text-gray-700 hover:text-primary px-3 py-2 text-sm font-medium transition-colors duration-200">Overview</a>
+                        <a href="#stakeholders" class="text-gray-700 hover:text-primary px-3 py-2 text-sm font-medium transition-colors duration-200">Stakeholders</a>
+                        <a href="#timeline" class="text-gray-700 hover:text-primary px-3 py-2 text-sm font-medium transition-colors duration-200">Timeline</a>
+                        <a href="#analytics" class="text-gray-700 hover:text-primary px-3 py-2 text-sm font-medium transition-colors duration-200">Analytics</a>
+                        <a href="#models" class="text-gray-700 hover:text-primary px-3 py-2 text-sm font-medium transition-colors duration-200">Models</a>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <button class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl">
+                            <i class="fa fa-dashboard mr-2"></i>Dashboard
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-24 pb-16 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto text-center">
+            <h1 class="text-4xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+                <span class="bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">
+                    ServiPlus Churn Prediction System
+                </span>
+            </h1>
+            <p class="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+                A unified, GDPR-compliant system that provides transparent, actionable insights for proactive customer retention
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button class="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl">
+                    <i class="fa fa-play mr-2"></i>View Demo
+                </button>
+                <button class="bg-white hover:bg-gray-50 text-primary border border-primary px-6 py-3 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg">
+                    <i class="fa fa-download mr-2"></i>Download Report
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Overview Section -->
+    <section id="overview" class="py-16 px-4 sm:px-6 lg:px-8 bg-white">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Project Overview</h2>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                    ServiPlus is developing an integrated Churn Prediction System to unify cross-departmental data and provide actionable insights
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+                <div class="bg-gradient-to-br from-primary to-secondary rounded-xl p-6 text-white card-hover">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold">Project Duration</h3>
+                        <i class="fa fa-calendar text-2xl opacity-70"></i>
+                    </div>
+                    <p class="text-3xl font-bold">4 Months</p>
+                    <p class="text-sm opacity-90 mt-2">From Requirement to Deployment</p>
+                </div>
+                
+                <div class="bg-gradient-to-br from-success to-green-500 rounded-xl p-6 text-white card-hover">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold">Services Covered</h3>
+                        <i class="fa fa-cubes text-2xl opacity-70"></i>
+                    </div>
+                    <p class="text-3xl font-bold">4</p>
+                    <p class="text-sm opacity-90 mt-2">Video, Music, Cloud, Education</p>
+                </div>
+                
+                <div class="bg-gradient-to-br from-accent to-cyan-500 rounded-xl p-6 text-white card-hover">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold">Stakeholders</h3>
+                        <i class="fa fa-users text-2xl opacity-70"></i>
+                    </div>
+                    <p class="text-3xl font-bold">5</p>
+                    <p class="text-sm opacity-90 mt-2">Marketing, Finance, Support, etc.</p>
+                </div>
+                
+                <div class="bg-gradient-to-br from-warning to-amber-500 rounded-xl p-6 text-white card-hover">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold">Sprints</h3>
+                        <i class="fa fa-flag-checkered text-2xl opacity-70"></i>
+                    </div>
+                    <p class="text-3xl font-bold">3</p>
+                    <p class="text-sm opacity-90 mt-2">V-Cycle Implementation Approach</p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="bg-white rounded-xl shadow-lg p-6 card-hover">
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">Project Vision</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        "To develop an integrated, GDPR-compliant Churn Prediction System that unifies cross-departmental data to provide transparent, actionable insights for proactive customer retention across all ServiPlus services."
+                    </p>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-lg p-6 card-hover">
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">Key Challenges</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <i class="fa fa-exclamation-circle text-warning mt-1 mr-3"></i>
+                            <span class="text-gray-600">Definition Fragmentation</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-exclamation-circle text-warning mt-1 mr-3"></i>
+                            <span class="text-gray-600">Data Inconsistency</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-exclamation-circle text-warning mt-1 mr-3"></i>
+                            <span class="text-gray-600">Compliance Risks</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-exclamation-circle text-warning mt-1 mr-3"></i>
+                            <span class="text-gray-600">Limited Resources</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stakeholders Section -->
+    <section id="stakeholders" class="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 to-indigo-100">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Stakeholder Analysis</h2>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                    Understanding the diverse needs of key stakeholders across the organization
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover">
+                    <div class="bg-gradient-to-r from-blue-500 to-blue-600 p-4 text-white">
+                        <div class="flex items-center">
+                            <i class="fa fa-bullhorn text-2xl mr-3"></i>
+                            <h3 class="text-xl font-bold">Marketing Department</h3>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h4 class="font-semibold text-gray-900 mb-2">Key Requirements:</h4>
+                        <ul class="space-y-2 text-gray-600">
+                            <li class="flex items-start">
+                                <i class="fa fa-check text-success mt-1 mr-2"></i>
+                                <span>"Early Warning" alert system (45 days inactivity)</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check text-success mt-1 mr-2"></i>
+                                <span>Proactive retention campaigns</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check text-success mt-1 mr-2"></i>
+                                <span>Targeted re-engagement strategies</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover">
+                    <div class="bg-gradient-to-r from-green-500 to-green-600 p-4 text-white">
+                        <div class="flex items-center">
+                            <i class="fa fa-money text-2xl mr-3"></i>
+                            <h3 class="text-xl font-bold">Finance Department</h3>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h4 class="font-semibold text-gray-900 mb-2">Key Requirements:</h4>
+                        <ul class="space-y-2 text-gray-600">
+                            <li class="flex items-start">
+                                <i class="fa fa-check text-success mt-1 mr-2"></i>
+                                <span>Financial impact analysis</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check text-success mt-1 mr-2"></i>
+                                <span>Revenue loss projections</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check text-success mt-1 mr-2"></i>
+                                <span>Budget adjustment capabilities</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover">
+                    <div class="bg-gradient-to-r from-purple-500 to-purple-600 p-4 text-white">
+                        <div class="flex items-center">
+                            <i class="fa fa-headphones text-2xl mr-3"></i>
+                            <h3 class="text-xl font-bold">Customer Support</h3>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h4 class="font-semibold text-gray-900 mb-2">Key Requirements:</h4>
+                        <ul class="space-y-2 text-gray-600">
+                            <li class="flex items-start">
+                                <i class="fa fa-check text-success mt-1 mr-2"></i>
+                                <span>Individual customer risk profiles</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check text-success mt-1 mr-2"></i>
+                                <span>Churn scores and reasons</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check text-success mt-1 mr-2"></i>
+                                <span>Personalized conversation tools</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover">
+                    <div class="bg-gradient-to-r from-orange-500 to-orange-600 p-4 text-white">
+                        <div class="flex items-center">
+                            <i class="fa fa-trophy text-2xl mr-3"></i>
+                            <h3 class="text-xl font-bold">Management Team</h3>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h4 class="font-semibold text-gray-900 mb-2">Key Requirements:</h4>
+                        <ul class="space-y-2 text-gray-600">
+                            <li class="flex items-start">
+                                <i class="fa fa-check text-success mt-1 mr-2"></i>
+                                <span>High-level strategic dashboards</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check text-success mt-1 mr-2"></i>
+                                <span>Cross-service performance comparison</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check text-success mt-1 mr-2"></i>
+                                <span>Strategic decision-making support</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover">
+                    <div class="bg-gradient-to-r from-red-500 to-red-600 p-4 text-white">
+                        <div class="flex items-center">
+                            <i class="fa fa-shield text-2xl mr-3"></i>
+                            <h3 class="text-xl font-bold">Compliance Team</h3>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h4 class="font-semibold text-gray-900 mb-2">Key Requirements:</h4>
+                        <ul class="space-y-2 text-gray-600">
+                            <li class="flex items-start">
+                                <i class="fa fa-check text-success mt-1 mr-2"></i>
+                                <span>GDPR adherence and data privacy</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check text-success mt-1 mr-2"></i>
+                                <span>"Non-Black Box" AI model</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check text-success mt-1 mr-2"></i>
+                                <span>Transparent, explainable results</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Timeline Section -->
+    <section id="timeline" class="py-16 px-4 sm:px-6 lg:px-8 bg-white">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Project Timeline</h2>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                    Phased implementation approach with 3 mini-sprints aligned with the V-Cycle phases
+                </p>
+            </div>
+            
+            <div class="relative">
+                <!-- Timeline Line -->
+                <div class="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-gradient-to-b from-primary via-secondary to-accent"></div>
+                
+                <!-- Sprint 1 -->
+                <div class="mb-16 relative">
+                    <div class="flex items-center justify-center">
+                        <div class="bg-primary text-white rounded-full w-12 h-12 flex items-center justify-center z-10">
+                            <span class="font-bold">1</span>
+                        </div>
+                    </div>
+                    <div class="mt-8">
+                        <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl p-6 max-w-2xl mx-auto">
+                            <h3 class="text-xl font-bold mb-3">Sprint 1: Understanding & Alignment</h3>
+                            <p class="text-sm opacity-90 mb-4">Duration: 2 weeks | Focus: Resolve ambiguities and finalize data governance rules</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <h4 class="font-semibold mb-2">Key Activities:</h4>
+                                    <ul class="space-y-1 text-sm">
+                                        <li>• Stakeholder workshops</li>
+                                        <li>• GDPR compliance assessment</li>
+                                        <li>• Hardware capability review</li>
+                                        <li>• Data governance framework</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold mb-2">Deliverables:</h4>
+                                    <ul class="space-y-1 text-sm">
+                                        <li>• Approved churn definition</li>
+                                        <li>• GDPR assessment report</li>
+                                        <li>• Hardware analysis</li>
+                                        <li>• Project charter</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sprint 2 -->
+                <div class="mb-16 relative">
+                    <div class="flex items-center justify-center">
+                        <div class="bg-secondary text-white rounded-full w-12 h-12 flex items-center justify-center z-10">
+                            <span class="font-bold">2</span>
+                        </div>
+                    </div>
+                    <div class="mt-8">
+                        <div class="bg-gradient-to-r from-indigo-500 to-indigo-600 text-white rounded-xl p-6 max-w-2xl mx-auto">
+                            <h3 class="text-xl font-bold mb-3">Sprint 2: Baseline Model & Explanations</h3>
+                            <p class="text-sm opacity-90 mb-4">Duration: 4 weeks | Focus: Build the "Non-Black Box" logic and handle inconsistent data logs</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <h4 class="font-semibold mb-2">Key Activities:</h4>
+                                    <ul class="space-y-1 text-sm">
+                                        <li>• Data cleaning & normalization</li>
+                                        <li>• GDPR-compliant data masking</li>
+                                        <li>• Predictive model architecture</li>
+                                        <li>• Feature importance mechanisms</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold mb-2">Deliverables:</h4>
+                                    <ul class="space-y-1 text-sm">
+                                        <li>• Data processing pipelines</li>
+                                        <li>• GDPR-compliant system</li>
+                                        <li>• Predictive model</li>
+                                        <li>• Performance metrics</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sprint 3 -->
+                <div class="relative">
+                    <div class="flex items-center justify-center">
+                        <div class="bg-accent text-white rounded-full w-12 h-12 flex items-center justify-center z-10">
+                            <span class="font-bold">3</span>
+                        </div>
+                    </div>
+                    <div class="mt-8">
+                        <div class="bg-gradient-to-r from-teal-500 to-teal-600 text-white rounded-xl p-6 max-w-2xl mx-auto">
+                            <h3 class="text-xl font-bold mb-3">Sprint 3: User-Facing Outputs</h3>
+                            <p class="text-sm opacity-90 mb-4">Duration: 6 weeks | Focus: Deliver the final dashboards and automated alerting systems</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <h4 class="font-semibold mb-2">Key Activities:</h4>
+                                    <ul class="space-y-1 text-sm">
+                                        <li>• Department-specific dashboards</li>
+                                        <li>• Automated alerting system</li>
+                                        <li>• Financial forecasting tools</li>
+                                        <li>• User acceptance testing</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold mb-2">Deliverables:</h4>
+                                    <ul class="space-y-1 text-sm">
+                                        <li>• Marketing dashboard</li>
+                                        <li>• Finance dashboard</li>
+                                        <li>• Support dashboard</li>
+                                        <li>• Management dashboard</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Analytics Section -->
+    <section id="analytics" class="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-gray-50 to-blue-50">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Analytics Dashboard</h2>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                    Interactive data visualization and predictive analytics for proactive decision making
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+                <!-- Churn Rate Comparison Chart -->
+                <div class="bg-white rounded-xl shadow-lg p-6 card-hover">
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">Churn Rate by Service</h3>
+                    <div id="churnRateChart" class="w-full h-80"></div>
+                </div>
+                
+                <!-- Revenue Impact Chart -->
+                <div class="bg-white rounded-xl shadow-lg p-6 card-hover">
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">Revenue Impact Analysis</h3>
+                    <div id="revenueImpactChart" class="w-full h-80"></div>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-white rounded-xl shadow-lg p-6 card-hover">
+                    <h4 class="text-gray-600 font-medium mb-2">Overall Churn Rate</h4>
+                    <div class="flex items-end">
+                        <span class="text-3xl font-bold text-gray-900">12.5%</span>
+                        <span class="text-sm text-danger ml-2 mb-1">↗ 2.3%</span>
+                    </div>
+                    <div class="mt-4">
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-gradient-to-r from-danger to-warning h-2 rounded-full" style="width: 12.5%"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-lg p-6 card-hover">
+                    <h4 class="text-gray-600 font-medium mb-2">At-Risk Revenue</h4>
+                    <div class="flex items-end">
+                        <span class="text-3xl font-bold text-gray-900">€2.4M</span>
+                        <span class="text-sm text-danger ml-2 mb-1">↗ 8.5%</span>
+                    </div>
+                    <div class="mt-4">
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-gradient-to-r from-warning to-danger h-2 rounded-full" style="width: 24%"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-lg p-6 card-hover">
+                    <h4 class="text-gray-600 font-medium mb-2">Customers at Risk</h4>
+                    <div class="flex items-end">
+                        <span class="text-3xl font-bold text-gray-900">15,842</span>
+                        <span class="text-sm text-success ml-2 mb-1">↘ 1.2%</span>
+                    </div>
+                    <div class="mt-4">
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-gradient-to-r from-success to-green-400 h-2 rounded-full" style="width: 15%"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-lg p-6 card-hover">
+                    <h4 class="text-gray-600 font-medium mb-2">Retention Rate</h4>
+                    <div class="flex items-end">
+                        <span class="text-3xl font-bold text-gray-900">87.5%</span>
+                        <span class="text-sm text-success ml-2 mb-1">↗ 3.1%</span>
+                    </div>
+                    <div class="mt-4">
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-gradient-to-r from-green-400 to-success h-2 rounded-full" style="width: 87.5%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Models Section -->
+    <section id="models" class="py-16 px-4 sm:px-6 lg:px-8 bg-white">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">AI Prediction Models</h2>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                    Explainable AI models that provide transparent insights into customer churn behavior
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+                <div class="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl p-8">
+                    <div class="flex items-center mb-6">
+                        <div class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full p-3 text-white mr-4">
+                            <i class="fa fa-cogs text-xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-900">Model Architecture</h3>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="bg-white rounded-lg p-4 shadow-sm">
+                            <h4 class="font-semibold text-gray-900 mb-2">Input Layer</h4>
+                            <p class="text-gray-600 text-sm">Customer demographics, usage patterns, engagement metrics</p>
+                        </div>
+                        
+                        <div class="bg-white rounded-lg p-4 shadow-sm">
+                            <h4 class="font-semibold text-gray-900 mb-2">Feature Engineering</h4>
+                            <p class="text-gray-600 text-sm">Behavioral patterns, service usage, payment history</p>
+                        </div>
+                        
+                        <div class="bg-white rounded-lg p-4 shadow-sm">
+                            <h4 class="font-semibold text-gray-900 mb-2">Prediction Engine</h4>
+                            <p class="text-gray-600 text-sm">Explainable AI model with feature importance</p>
+                        </div>
+                        
+                        <div class="bg-white rounded-lg p-4 shadow-sm">
+                            <h4 class="font-semibold text-gray-900 mb-2">Output Layer</h4>
+                            <p class="text-gray-600 text-sm">Churn probability score (0-100) with reason codes</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl p-8">
+                    <div class="flex items-center mb-6">
+                        <div class="bg-gradient-to-r from-blue-500 to-cyan-600 rounded-full p-3 text-white mr-4">
+                            <i class="fa fa-chart-line text-xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-900">Model Performance</h3>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4 mb-6">
+                        <div class="bg-white rounded-lg p-4 text-center shadow-sm">
+                            <div class="text-2xl font-bold text-primary mb-1">89.2%</div>
+                            <div class="text-sm text-gray-600">Accuracy</div>
+                        </div>
+                        <div class="bg-white rounded-lg p-4 text-center shadow-sm">
+                            <div class="text-2xl font-bold text-success mb-1">87.5%</div>
+                            <div class="text-sm text-gray-600">Precision</div>
+                        </div>
+                        <div class="bg-white rounded-lg p-4 text-center shadow-sm">
+                            <div class="text-2xl font-bold text-warning mb-1">85.3%</div>
+                            <div class="text-sm text-gray-600">Recall</div>
+                        </div>
+                        <div class="bg-white rounded-lg p-4 text-center shadow-sm">
+                            <div class="text-2xl font-bold text-accent mb-1">86.4%</div>
+                            <div class="text-sm text-gray-600">F1 Score</div>
+                        </div>
+                    </div>
+                    
+                    <div id="modelPerformanceChart" class="w-full h-64"></div>
+                </div>
+            </div>
+            
+            <div class="bg-gradient-to-r from-gray-50 to-blue-50 rounded-xl p-8">
+                <h3 class="text-2xl font-bold text-gray-900 mb-6 text-center">Feature Importance</h3>
+                <div id="featureImportanceChart" class="w-full h-80"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <i class="fa fa-shield text-primary text-2xl mr-2"></i>
+                        <span class="text-xl font-bold">ServiPlus</span>
+                    </div>
+                    <p class="text-gray-400 text-sm">
+                        A unified, GDPR-compliant Churn Prediction System that provides transparent, actionable insights for proactive customer retention.
+                    </p>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#overview" class="hover:text-white transition-colors">Overview</a></li>
+                        <li><a href="#stakeholders" class="hover:text-white transition-colors">Stakeholders</a></li>
+                        <li><a href="#timeline" class="hover:text-white transition-colors">Timeline</a></li>
+                        <li><a href="#analytics" class="hover:text-white transition-colors">Analytics</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Contact</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li class="flex items-center">
+                            <i class="fa fa-envelope mr-2"></i>
+                            <span>zwx250301384@gmail.com</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fa fa-calendar mr-2"></i>
+                            <span>December 18, 2025</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Follow Us</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="bg-gray-800 hover:bg-primary w-10 h-10 rounded-full flex items-center justify-center transition-colors">
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                        <a href="#" class="bg-gray-800 hover:bg-primary w-10 h-10 rounded-full flex items-center justify-center transition-colors">
+                            <i class="fa fa-linkedin"></i>
+                        </a>
+                        <a href="#" class="bg-gray-800 hover:bg-primary w-10 h-10 rounded-full flex items-center justify-center transition-colors">
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400 text-sm">
+                <p>&copy; 2025 ServiPlus Churn Prediction System. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Initialize charts when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Churn Rate by Service Chart
+            const churnRateChart = echarts.init(document.getElementById('churnRateChart'));
+            const churnRateOption = {
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'shadow'
+                    }
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'category',
+                    data: ['Video', 'Music', 'Cloud', 'Education'],
+                    axisTick: {
+                        alignWithLabel: true
+                    }
+                },
+                yAxis: {
+                    type: 'value',
+                    min: 0,
+                    max: 20,
+                    axisLabel: {
+                        formatter: '{value}%'
+                    }
+                },
+                series: [{
+                    name: 'Churn Rate',
+                    type: 'bar',
+                    barWidth: '60%',
+                    data: [12.5, 18.3, 8.7, 15.2],
+                    itemStyle: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                            {offset: 0, color: '#1e40af'},
+                            {offset: 1, color: '#3b82f6'}
+                        ])
+                    }
+                }]
+            };
+            churnRateChart.setOption(churnRateOption);
+
+            // Revenue Impact Chart
+            const revenueImpactChart = echarts.init(document.getElementById('revenueImpactChart'));
+            const revenueImpactOption = {
+                tooltip: {
+                    trigger: 'item'
+                },
+                legend: {
+                    top: '5%',
+                    left: 'center'
+                },
+                series: [{
+                    name: 'Revenue Impact',
+                    type: 'pie',
+                    radius: ['40%', '70%'],
+                    avoidLabelOverlap: false,
+                    itemStyle: {
+                        borderRadius: 10,
+                        borderColor: '#fff',
+                        borderWidth: 2
+                    },
+                    label: {
+                        show: false,
+                        position: 'center'
+                    },
+                    emphasis: {
+                        label: {
+                            show: true,
+                            fontSize: 20,
+                            fontWeight: 'bold'
+                        }
+                    },
+                    labelLine: {
+                        show: false
+                    },
+                    data: [
+                        {value: 1200, name: 'Video', itemStyle: {color: '#1e40af'}},
+                        {value: 800, name: 'Music', itemStyle: {color: '#3b82f6'}},
+                        {value: 300, name: 'Cloud', itemStyle: {color: '#06b6d4'}},
+                        {value: 100, name: 'Education', itemStyle: {color: '#10b981'}}
+                    ]
+                }]
+            };
+            revenueImpactChart.setOption(revenueImpactOption);
+
+            // Model Performance Chart
+            const modelPerformanceChart = echarts.init(document.getElementById('modelPerformanceChart'));
+            const modelPerformanceOption = {
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'shadow'
+                    }
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'category',
+                    data: ['Q1', 'Q2', 'Q3', 'Q4'],
+                    axisTick: {
+                        alignWithLabel: true
+                    }
+                },
+                yAxis: {
+                    type: 'value',
+                    min: 80,
+                    max: 95,
+                    axisLabel: {
+                        formatter: '{value}%'
+                    }
+                },
+                series: [{
+                    name: 'Accuracy',
+                    type: 'line',
+                    data: [85.2, 87.5, 88.3, 89.2],
+                    itemStyle: {
+                        color: '#1e40af'
+                    },
+                    lineStyle: {
+                        width: 3
+                    }
+                }]
+            };
+            modelPerformanceChart.setOption(modelPerformanceOption);
+
+            // Feature Importance Chart
+            const featureImportanceChart = echarts.init(document.getElementById('featureImportanceChart'));
+            const featureImportanceOption = {
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'shadow'
+                    }
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'value',
+                    axisLabel: {
+                        formatter: '{value}%'
+                    }
+                },
+                yAxis: {
+                    type: 'category',
+                    data: ['Payment History', 'Usage Frequency', 'Service Diversity', 'Support Tickets', 'Contract Duration']
+                },
+                series: [{
+                    name: 'Feature Importance',
+                    type: 'bar',
+                    data: [25.3, 22.1, 18.7, 15.2, 12.5],
+                    itemStyle: {
+                        color: new echarts.graphic.LinearGradient(1, 0, 0, 0, [
+                            {offset: 0, color: '#1e40af'},
+                            {offset: 1, color: '#3b82f6'}
+                        ])
+                    }
+                }]
+            };
+            featureImportanceChart.setOption(featureImportanceOption);
+
+            // Resize charts on window resize
+            window.addEventListener('resize', function() {
+                churnRateChart.resize();
+                revenueImpactChart.resize();
+                modelPerformanceChart.resize();
+                featureImportanceChart.resize();
+            });
+        });
+
+        // Add scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all cards for animation
+        document.querySelectorAll('.card-hover').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'all 0.6s ease';
+            observer.observe(card);
+        });
+
+        // Add active class to navigation on scroll
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('nav a');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= (sectionTop - 100)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('text-primary', 'font-semibold');
+                link.classList.add('text-gray-700');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.remove('text-gray-700');
+                    link.classList.add('text-primary', 'font-semibold');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
